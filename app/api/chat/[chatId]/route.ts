@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 import { StreamingTextResponse, LangChainStream } from "ai";
 import { Replicate } from "@langchain/community/llms/replicate";
-// import { CallbackManager } from "langchain/callbacks";
 import { NextResponse } from "next/server";
 
 import { MemoryManager } from "@/lib/memory";
 import { rateLimit } from "@/lib/rate-limit";
 import prismadb from "@/lib/prismadb";
 import { currentUser } from "@clerk/nextjs/server";
+import { CallbackManager } from "@langchain/core/callbacks/manager";
 
 dotenv.config({ path: `.env` });
 
@@ -89,8 +89,7 @@ export async function POST(
         max_length: 2048,
       },
       apiKey: process.env.REPLICATE_API_TOKEN,
-    //   callbackManager: new CallbackManager([handlers]),
-    //   callbackManager: CallbackManager.fromHandlers(handlers),
+      callbackManager: CallbackManager.fromHandlers(handlers)
     });
 
     // Turn verbose on for debugging
